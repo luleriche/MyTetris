@@ -1,6 +1,4 @@
-#ifndef PIECE_HPP
-#define PIECE_HPP
-#endif
+#pragma once
 
 #include <SFML/Graphics.hpp>
 #include <Piece.hpp>

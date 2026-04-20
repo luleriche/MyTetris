@@ -1,6 +1,4 @@
-#ifndef GRID_HPP
-#define GRID_HPP
-#endif
+#pragma once
 
 #include <SFML/Graphics.hpp>
 
