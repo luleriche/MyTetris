@@ -1,33 +1,32 @@
 #include "Grid.hpp"
 
-Grid::Grid(sf::Vector2f size, int nb_col, int nb_row) {
-    this->size = size;
-    this->bg_color = sf::Color(10, 10, 10);
-    this->l_color = sf::Color(40, 40, 40);
-    this->l_width = 2;
-    this->nb_col = nb_col;
-    this->nb_row = nb_row;
-    this->bricks_size = sf::Vector2f(size.x / nb_col, size.y / nb_row);
+Grid::Grid(sf::Vector2f totalSize, int nb_col, int nb_row) 
+    : m_totalSize(totalSize), m_gridSize(nb_col, nb_row)
+{
+    m_bgColor = sf::Color(10, 10, 10);
+    m_lineColor = sf::Color(40, 40, 40);
+    m_lineWidth = 2;
+    m_tileSize = sf::Vector2f(m_totalSize.x / m_gridSize.x, m_totalSize.y / m_gridSize.y);
 }
 
 void Grid::draw(sf::RenderWindow& window) {
-    sf::RectangleShape bg(this->size);
-    bg.setFillColor(this->bg_color);
+    sf::RectangleShape bg(m_totalSize);
+    bg.setFillColor(m_bgColor);
     window.draw(bg);
-    for (int i = 0; i < this->nb_col + 1; ++i) {
-        sf::RectangleShape line(sf::Vector2f(this->l_width, this->size.y));
-        line.setPosition(sf::Vector2f(i * this->bricks_size.x - this->l_width / 2, 0));
-        line.setFillColor(this->l_color);
+    for (int i = 0; i < m_gridSize.x + 1; ++i) {
+        sf::RectangleShape line(sf::Vector2f(m_lineWidth, m_totalSize.y));
+        line.setPosition(sf::Vector2f(i * m_tileSize.x - m_lineWidth / 2, 0));
+        line.setFillColor(m_lineColor);
         window.draw(line);
     }
-    for (int i = 0; i < this->nb_row + 1; ++i) {
-        sf::RectangleShape line(sf::Vector2f(this->size.x, this->l_width));
-        line.setPosition(sf::Vector2f(0, i * this->bricks_size.y - this->l_width / 2));
-        line.setFillColor(this->l_color);
+    for (int i = 0; i < m_gridSize.y + 1; ++i) {
+        sf::RectangleShape line(sf::Vector2f(m_totalSize.x, m_lineWidth));
+        line.setPosition(sf::Vector2f(0, i * m_tileSize.y - m_lineWidth / 2));
+        line.setFillColor(m_lineColor);
         window.draw(line);
     }
 }
 
-sf::Vector2f Grid::get_bricks_size() {
-    return this->bricks_size;
+sf::Vector2f Grid::get_tileSize() {
+    return m_tileSize;
 };

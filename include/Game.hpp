@@ -6,15 +6,14 @@
 #include <Piece.hpp>
 #include <Grid.hpp>
 
-class Game{
-
+class Game
+{
 private:
     Grid m_grid;
     Piece m_piece;
-public:
-    sf::Vector2f m_size, m_pos;
 
-    Game(sf::Vector2f pos, sf::Vector2f size);
+public:
+    Game(sf::Vector2f gridSize);
 
     void game_loop();
 };

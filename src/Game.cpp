@@ -1,10 +1,9 @@
 #include <Game.hpp>
 
-Game::Game(sf::Vector2f pos, sf::Vector2f size) : m_grid(size, 10, 18), m_size(size), m_pos(pos){
+Game::Game(sf::Vector2f gridSize) : m_grid(gridSize, 10, 18){
     sf::Texture brick_texture;
     brick_texture.loadFromFile("assets/WhiteSquare.jpg");
-    m_piece = Piece(sf::Color::Green, "oxo/xxx", sf::Vector2f(50, 50), brick_texture);
-    m_piece.create_sprites();
+    m_piece = Piece("oxo/xxx", sf::Color::Green, sf::Vector2f(50, 50), brick_texture);
 }
 
 void Game::game_loop(){
