@@ -1,7 +1,7 @@
 #include "Piece.hpp"
 #include "Brick.hpp"
 
-Piece::Piece(std::string pattern, sf::Color color, sf::Vector2f bricksSize, sf::Texture &bricksTexture)
+Piece::Piece(std::string pattern, sf::Color color, sf::Vector2f bricksSize, const sf::Texture& bricksTexture)
 : m_bricksTexture(&bricksTexture) , m_bricksColor(color), m_bricksSize(bricksSize) {
     int x = 0;
     int y = 0;

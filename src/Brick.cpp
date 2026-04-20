@@ -1,6 +1,6 @@
 #include "Brick.hpp"
 
-Brick::Brick(sf::Vector2i gridPos, sf::Vector2f size, sf::Texture &texture, sf::Color color)
+Brick::Brick(sf::Vector2i gridPos, sf::Vector2f size, const sf::Texture &texture, sf::Color color)
 : m_gridPos(gridPos)
 {
     this->setTexture(texture);

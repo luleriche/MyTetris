@@ -1,9 +1,10 @@
 #include <Game.hpp>
+#include <iostream>
 
 Game::Game(sf::Vector2f gridSize) : m_grid(gridSize, 10, 18){
-    sf::Texture brick_texture;
-    brick_texture.loadFromFile("assets/WhiteSquare.jpg");
-    m_piece = Piece("oxo/xxx", sf::Color::Green, sf::Vector2f(50, 50), brick_texture);
+    if(!m_brickTexture.loadFromFile("assets/WhiteSquare.jpg"))
+        std::cout << "Erreur !";
+    m_piece = Piece("oxo/xxx", sf::Color::Green, sf::Vector2f(50, 50), m_brickTexture);
 }
 
 void Game::game_loop(){

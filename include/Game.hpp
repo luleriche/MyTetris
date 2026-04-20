@@ -7,6 +7,7 @@
 class Game
 {
 private:
+    sf::Texture m_brickTexture;
     Grid m_grid;
     Piece m_piece;
 

@@ -9,7 +9,7 @@ private:
 public:
     Brick() = default;
 
-    Brick(sf::Vector2i gridPos, sf::Vector2f brickSize, sf::Texture &texture, sf::Color brickColor);
+    Brick(sf::Vector2i gridPos, sf::Vector2f brickSize, const sf::Texture &texture, sf::Color brickColor);
 
     void moveBrick(sf::Vector2i vector);
 };

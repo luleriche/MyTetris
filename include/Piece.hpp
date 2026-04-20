@@ -11,13 +11,13 @@ class Piece
 private:
     int m_nbBricks;
     std::array<Brick, NMax> m_bricks;
-    sf::Texture* m_bricksTexture;
+    const sf::Texture* m_bricksTexture;
     sf::Color m_bricksColor;
     sf::Vector2f m_bricksSize;
 public:
     Piece() = default;
 
-    Piece(std::string pattern, sf::Color color, sf::Vector2f brick_sizes, sf::Texture& brick_texture);
+    Piece(std::string pattern, sf::Color color, sf::Vector2f brick_sizes, const sf::Texture &brick_texture);
 
     void move(sf::Vector2i vector);
 
