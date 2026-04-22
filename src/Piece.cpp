@@ -1,5 +1,5 @@
 #include "Piece.hpp"
-#include "Brick.hpp"
+
 
 Piece::Piece(std::string pattern, sf::Color color, sf::Vector2f bricksSize, const sf::Texture& bricksTexture)
 : m_bricksTexture(&bricksTexture) , m_bricksColor(color), m_bricksSize(bricksSize) {
@@ -23,10 +23,11 @@ Piece::Piece(std::string pattern, sf::Color color, sf::Vector2f bricksSize, cons
     }
 }
 
-void Piece::move(sf::Vector2i vector) {
-    for(int i = 0; i < m_nbBricks; ++i){
-        m_bricks[i].moveBrick(vector);
-    }
+void Piece::tryMove(sf::Vector2i vector, sf::Vector2i gridSize) {
+    if(not isOutOfBounds(getPosAfterMove(this->getAllBricksPos(), m_nbBricks, vector), m_nbBricks, gridSize))
+        for(int i = 0; i < m_nbBricks; ++i){
+            m_bricks[i].moveBrick(vector);
+        }
 }
 
 void Piece::draw(sf::RenderWindow& window) {
@@ -37,6 +38,14 @@ void Piece::draw(sf::RenderWindow& window) {
 
 int Piece::getNbBricks(){
     return m_nbBricks;
+}
+
+std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> Piece::getAllBricksPos(){
+    std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> result;
+    for(int i = 0; i < m_nbBricks; ++i){
+        result[i] = m_bricks[i].getGridPos();
+    }
+    return result;
 }
 
 std::array<Brick, NMax> Piece::getBricksList(){

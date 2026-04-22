@@ -5,7 +5,7 @@
 
 int main()
 {
-    Game my_game(sf::Vector2f(500, 900));
+    Game my_game(sf::Vector2f(350, 630));
     my_game.game_loop();
     return 0;
 }

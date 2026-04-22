@@ -30,4 +30,6 @@ public:
     sf::Vector2f get_tileSize();
 
     void addPieceToBricks(Piece piece);
+
+    sf::Vector2i getGridSize();
 };

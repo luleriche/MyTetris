@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Brick.hpp"
+#include "Utils.hpp"
 #include <array>
 
 const int NMax = 9;
@@ -24,11 +25,13 @@ public:
     Piece(std::string pattern, sf::Color color, sf::Vector2f brick_sizes, const sf::Texture &brick_texture);
     
     // Change la position des briques de la pièce
-    void move(sf::Vector2i vector);
+    void tryMove(sf::Vector2i vector, sf::Vector2i gridSize);
 
     void draw(sf::RenderWindow& window);
     
     int getNbBricks();
+
+    std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> getAllBricksPos();
 
     std::array<Brick, NMax> getBricksList();
 };

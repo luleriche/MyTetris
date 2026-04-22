@@ -54,3 +54,6 @@ void Grid::addPieceToBricks(Piece piece){
     }
 }
 
+sf::Vector2i Grid::getGridSize(){
+    return m_gridSize;
+}
