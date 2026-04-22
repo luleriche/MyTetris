@@ -1,10 +1,14 @@
 #include <Game.hpp>
 #include <iostream>
+#include "Utils.hpp"
+#include <ctime>
+#include <cstdlib>
 
 Game::Game(sf::Vector2f gridSize) : m_grid(gridSize, 10, 18){
+    srand(time(nullptr));
     if(!m_brickTexture.loadFromFile("assets/WhiteSquare.jpg"))
         std::cout << "Erreur au chargement de la texture !";
-    m_piece = Piece("xxxx", sf::Color::Green, sf::Vector2f(35, 35), m_brickTexture);
+    m_piece = Piece(basisMolds[0], sf::Vector2f(35, 35), m_brickTexture);
 }
 
 void Game::game_loop(){
@@ -31,6 +35,7 @@ void Game::game_loop(){
                 }
                 else if (event.key.scancode == sf::Keyboard::Scan::Space){
                     m_grid.addPieceToBricks(m_piece);
+                    m_piece = Piece(basisMolds[rand()%7], sf::Vector2f(35, 35), m_brickTexture);
                 }
             }
         }

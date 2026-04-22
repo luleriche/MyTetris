@@ -1,19 +1,19 @@
 #include "Piece.hpp"
 
 
-Piece::Piece(std::string pattern, sf::Color color, sf::Vector2f bricksSize, const sf::Texture& bricksTexture)
-: m_bricksTexture(&bricksTexture) , m_bricksColor(color), m_bricksSize(bricksSize) {
+Piece::Piece(PieceMold mold, sf::Vector2f bricksSize, const sf::Texture& bricksTexture)
+: m_bricksTexture(&bricksTexture) , m_bricksColor(mold.color), m_bricksSize(bricksSize) {
     int x = 0;
     int y = 0;
     m_nbBricks = 0;
-    for (unsigned int i = 0; i < pattern.length(); ++i) {
-        if (pattern[i] == 'x') {
-            sf::Vector2i gridPos(x, y);
-            m_bricks[m_nbBricks] = Brick(gridPos, bricksSize, bricksTexture, color);
+    for (unsigned int i = 0; i < mold.pattern.length(); ++i) {
+        if (mold.pattern[i] == 'x') {
+            sf::Vector2i gridPos(x+mold.spawnOffset.x, y+mold.spawnOffset.y);
+            m_bricks[m_nbBricks] = Brick(gridPos, bricksSize, bricksTexture, m_bricksColor);
             ++m_nbBricks;
             ++x;
         }
-        else if (pattern[i] == '/') {
+        else if (mold.pattern[i] == '/') {
             ++y;
             x = 0;
         }

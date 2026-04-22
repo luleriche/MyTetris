@@ -1,9 +1,12 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "Brick.hpp"
 #include "Utils.hpp"
 #include <array>
+
+#include "Brick.hpp"
+
+
 
 const int NMax = 9;
 
@@ -22,7 +25,7 @@ private:
 public:
     Piece() = default;
 
-    Piece(std::string pattern, sf::Color color, sf::Vector2f brick_sizes, const sf::Texture &brick_texture);
+    Piece(PieceMold Mold, sf::Vector2f brick_sizes, const sf::Texture &brick_texture);
     
     // Change la position des briques de la pièce
     void tryMove(sf::Vector2i vector, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy);
