@@ -9,9 +9,9 @@ Brick::Brick(sf::Vector2i gridPos, sf::Vector2f size, const sf::Texture &texture
     this->setPosition(gridPos.x*size.x, gridPos.y*size.y);
 }
 
-void Brick::moveBrick(sf::Vector2i vector){
-    m_gridPos += vector;
-    this->move(vector.x*this->getGlobalBounds().width, vector.y*this->getGlobalBounds().height);
+void Brick::moveBrick(sf::Vector2i offset){
+    m_gridPos += offset;
+    this->move(offset.x*this->getGlobalBounds().width, offset.y*this->getGlobalBounds().height);
 }
 
 sf::Vector2i Brick::getGridPos(){
