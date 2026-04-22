@@ -14,3 +14,14 @@ bool isOutOfBounds(std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> t_pos, int nb_po
         ++i;
     return i < nb_pos;
 }
+
+bool isSpaceFree(std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> t_pos, int nb_pos,  std::array<std::array<bool, nbMaxRow>, nbMaxCol> grid_occupancy){
+    int i = 0;
+    while(i < nb_pos and not grid_occupancy[t_pos[i].x][t_pos[i].y])
+        ++i;
+    return i == nb_pos;
+}
+
+bool isValid(std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> t_pos, int nb_pos, sf::Vector2i grid_size, std::array<std::array<bool, nbMaxRow>, nbMaxCol> grid_occupancy){
+    return not isOutOfBounds(t_pos, nb_pos, grid_size) and isSpaceFree(t_pos, nb_pos, grid_occupancy);
+}

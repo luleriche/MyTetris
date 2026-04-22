@@ -23,8 +23,9 @@ Piece::Piece(std::string pattern, sf::Color color, sf::Vector2f bricksSize, cons
     }
 }
 
-void Piece::tryMove(sf::Vector2i vector, sf::Vector2i gridSize) {
-    if(not isOutOfBounds(getPosAfterMove(this->getAllBricksPos(), m_nbBricks, vector), m_nbBricks, gridSize))
+void Piece::tryMove(sf::Vector2i vector, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy) {
+
+    if(isValid(getPosAfterMove(this->getAllBricksPos(), m_nbBricks, vector), m_nbBricks, gridSize, gridOccupancy))
         for(int i = 0; i < m_nbBricks; ++i){
             m_bricks[i].moveBrick(vector);
         }

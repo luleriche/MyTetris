@@ -12,6 +12,7 @@ Grid::Grid(sf::Vector2f totalSize, int nb_col, int nb_row)
     for(int x = 0; x < nb_col; ++x){
         for(int y = 0; y < nb_row; ++y){
             m_gridBricks[x][y] = nullptr;
+            m_gridOccupancy[x][y] = false;
         }
     }
 }
@@ -51,9 +52,14 @@ void Grid::addPieceToBricks(Piece piece){
         b_pos = bricks[i].getGridPos();
         m_gridBricks[b_pos.x][b_pos.y] = new Brick;
         *m_gridBricks[b_pos.x][b_pos.y] = bricks[i];
+        m_gridOccupancy[b_pos.x][b_pos.y] = true;
     }
 }
 
 sf::Vector2i Grid::getGridSize(){
     return m_gridSize;
+}
+
+std::array<std::array<bool, nbMaxRow>, nbMaxCol> Grid::getGridOccupancy(){
+    return m_gridOccupancy;
 }
