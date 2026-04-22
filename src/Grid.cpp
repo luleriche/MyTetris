@@ -1,4 +1,5 @@
 #include "Grid.hpp"
+#include "Piece.hpp"
 
 Grid::Grid(sf::Vector2f totalSize, int nb_col, int nb_row) 
     : m_totalSize(totalSize), m_gridSize(nb_col, nb_row)
@@ -7,6 +8,12 @@ Grid::Grid(sf::Vector2f totalSize, int nb_col, int nb_row)
     m_lineColor = sf::Color(40, 40, 40);
     m_lineWidth = 2;
     m_tileSize = sf::Vector2f(m_totalSize.x / m_gridSize.x, m_totalSize.y / m_gridSize.y);
+
+    for(int x = 0; x < nb_col; ++x){
+        for(int y = 0; y < nb_row; ++y){
+            m_gridBricks[x][y] = nullptr;
+        }
+    }
 }
 
 void Grid::draw(sf::RenderWindow& window) {
@@ -25,8 +32,25 @@ void Grid::draw(sf::RenderWindow& window) {
         line.setFillColor(m_lineColor);
         window.draw(line);
     }
+    for(int x = 0; x < m_gridSize.x; ++x){
+        for(int y = 0; y < m_gridSize.y; ++y){
+            if(m_gridBricks[x][y] != nullptr)
+                window.draw(*(m_gridBricks[x][y]));
+        }
+    }
 }
 
 sf::Vector2f Grid::get_tileSize() {
     return m_tileSize;
 };
+
+void Grid::addPieceToBricks(Piece piece){
+    std::array<Brick, NMax> bricks = piece.getBricksList();
+    sf::Vector2i b_pos;
+    for(int i = 0; i < piece.getNbBricks(); ++i){
+        b_pos = bricks[i].getGridPos();
+        m_gridBricks[b_pos.x][b_pos.y] = new Brick;
+        *m_gridBricks[b_pos.x][b_pos.y] = bricks[i];
+    }
+}
+

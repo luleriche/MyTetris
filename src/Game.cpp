@@ -3,7 +3,7 @@
 
 Game::Game(sf::Vector2f gridSize) : m_grid(gridSize, 10, 18){
     if(!m_brickTexture.loadFromFile("assets/WhiteSquare.jpg"))
-        std::cout << "Erreur !";
+        std::cout << "Erreur au chargement de la texture !";
     m_piece = Piece("oxo/xxx", sf::Color::Green, sf::Vector2f(50, 50), m_brickTexture);
 }
 
@@ -28,6 +28,9 @@ void Game::game_loop(){
                 }
                 else if (event.key.scancode == sf::Keyboard::Scan::Down) {
                     m_piece.move(sf::Vector2i(0, 1));
+                }
+                else if (event.key.scancode == sf::Keyboard::Scan::Space){
+                    m_grid.addPieceToBricks(m_piece);
                 }
             }
         }

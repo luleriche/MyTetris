@@ -34,3 +34,11 @@ void Piece::draw(sf::RenderWindow& window) {
         window.draw(m_bricks[i]);
     }
 }
+
+int Piece::getNbBricks(){
+    return m_nbBricks;
+}
+
+std::array<Brick, NMax> Piece::getBricksList(){
+    return m_bricks;
+}

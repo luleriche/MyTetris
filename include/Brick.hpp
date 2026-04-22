@@ -12,4 +12,6 @@ public:
     Brick(sf::Vector2i gridPos, sf::Vector2f brickSize, const sf::Texture &texture, sf::Color brickColor);
 
     void moveBrick(sf::Vector2i vector);
+
+    sf::Vector2i getGridPos();
 };
