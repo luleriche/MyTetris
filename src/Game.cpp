@@ -34,10 +34,12 @@ void Game::game_loop(){
                 else if (event.key.scancode == sf::Keyboard::Scan::Down) {
                     m_piece.tryMove(sf::Vector2i(0, 1), m_grid.getGridSize(), m_grid.getGridOccupancy());
                 }
+                else if (event.key.scancode == sf::Keyboard::Scan::Space) {
+                    m_piece.tryRotate(1, m_grid.getGridSize(), m_grid.getGridOccupancy());
+                }
             }
-            
         }
-        if(lastForceDownClock.getElapsedTime().asMilliseconds() > 600){
+        if(lastForceDownClock.getElapsedTime().asMilliseconds() > 700){
             lastForceDownClock.restart();
             if(not m_piece.tryMove(sf::Vector2i(0, 1), m_grid.getGridSize(), m_grid.getGridOccupancy())){
                 m_grid.addPieceToBricks(m_piece);

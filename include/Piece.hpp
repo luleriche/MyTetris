@@ -21,6 +21,7 @@ private:
     const sf::Texture* m_bricksTexture;
     sf::Color m_bricksColor;
     sf::Vector2f m_bricksSize;
+    sf::Vector2f m_rotationCenter;
 
 public:
     Piece() = default;
@@ -29,6 +30,8 @@ public:
     
     // Change la position des briques de la pièce
     bool tryMove(sf::Vector2i vector, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy);
+
+    bool tryRotate(int nbRotation, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy);
 
     void draw(sf::RenderWindow& window);
     

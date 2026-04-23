@@ -2,7 +2,7 @@
 
 
 Piece::Piece(PieceMold mold, sf::Vector2f bricksSize, const sf::Texture& bricksTexture)
-: m_bricksTexture(&bricksTexture) , m_bricksColor(mold.color), m_bricksSize(bricksSize) {
+: m_bricksTexture(&bricksTexture) , m_bricksColor(mold.color), m_bricksSize(bricksSize), m_rotationCenter(mold.rotationCenter+static_cast<sf::Vector2f>(mold.spawnOffset)) {
     int x = 0;
     int y = 0;
     m_nbBricks = 0;
@@ -29,6 +29,19 @@ bool Piece::tryMove(sf::Vector2i vector, sf::Vector2i gridSize, std::array<std::
     {
         for(int i = 0; i < m_nbBricks; ++i){
             m_bricks[i].moveBrick(vector);
+        }
+        m_rotationCenter += static_cast<sf::Vector2f>(vector);
+        return true;
+    }else
+        return false;
+}
+
+bool Piece::tryRotate(int nbRotation, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy){
+    std::array<sf::Vector2i,NB_MAX_PIECE_BRICK > posAfterRot = getPosAfterRotate(this->getAllBricksPos(), m_nbBricks, m_rotationCenter);
+    if(isValid(posAfterRot, m_nbBricks, gridSize, gridOccupancy))
+    {
+        for(int i = 0; i < m_nbBricks; ++i){
+            m_bricks[i].setGridPos(posAfterRot[i]);
         }
         return true;
     }else

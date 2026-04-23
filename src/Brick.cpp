@@ -14,6 +14,12 @@ void Brick::moveBrick(sf::Vector2i offset){
     this->move(offset.x*this->getGlobalBounds().width, offset.y*this->getGlobalBounds().height);
 }
 
+
 sf::Vector2i Brick::getGridPos(){
     return m_gridPos;
+}
+
+void Brick::setGridPos(sf::Vector2i gridPos){
+    m_gridPos = gridPos;
+    this->setPosition(sf::Vector2f(m_gridPos.x*this->getGlobalBounds().width, m_gridPos.y*this->getGlobalBounds().height));
 }

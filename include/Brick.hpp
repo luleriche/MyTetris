@@ -29,4 +29,11 @@ void moveBrick(sf::Vector2i offset);
 * @return sf::Vector2i
 */
 sf::Vector2i getGridPos();
+
+
+/**
+* @brief Change la position de la brique sur la grille.
+* @param gridPos Nouvelle position
+*/
+void setGridPos(sf::Vector2i gridPos);
 };
