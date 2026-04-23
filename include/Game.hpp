@@ -13,6 +13,7 @@ private:
     // Différents éléments enfants au jeu
     Grid m_grid;
     Piece m_piece;
+    sf::Clock lastForceDownClock;
 
 public:
     // Constructeur

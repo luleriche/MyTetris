@@ -9,6 +9,7 @@ Game::Game(sf::Vector2f gridSize) : m_grid(gridSize, 10, 18){
     if(!m_brickTexture.loadFromFile("assets/WhiteSquare.jpg"))
         std::cout << "Erreur au chargement de la texture !";
     m_piece = Piece(basisMolds[0], sf::Vector2f(35, 35), m_brickTexture);
+    lastForceDownClock.restart();
 }
 
 void Game::game_loop(){
@@ -33,11 +34,15 @@ void Game::game_loop(){
                 else if (event.key.scancode == sf::Keyboard::Scan::Down) {
                     m_piece.tryMove(sf::Vector2i(0, 1), m_grid.getGridSize(), m_grid.getGridOccupancy());
                 }
-                else if (event.key.scancode == sf::Keyboard::Scan::Space){
-                    m_grid.addPieceToBricks(m_piece);
-                    m_piece = Piece(basisMolds[rand()%7], sf::Vector2f(35, 35), m_brickTexture);
-                }
             }
+            
+        }
+        if(lastForceDownClock.getElapsedTime().asMilliseconds() > 600){
+            lastForceDownClock.restart();
+            if(not m_piece.tryMove(sf::Vector2i(0, 1), m_grid.getGridSize(), m_grid.getGridOccupancy())){
+                m_grid.addPieceToBricks(m_piece);
+                m_piece = Piece(basisMolds[rand()%7], sf::Vector2f(35, 35), m_brickTexture);
+            };
         }
         m_grid.draw(window);
         m_piece.draw(window);

@@ -23,12 +23,17 @@ Piece::Piece(PieceMold mold, sf::Vector2f bricksSize, const sf::Texture& bricksT
     }
 }
 
-void Piece::tryMove(sf::Vector2i vector, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy) {
+bool Piece::tryMove(sf::Vector2i vector, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy) {
 
     if(isValid(getPosAfterMove(this->getAllBricksPos(), m_nbBricks, vector), m_nbBricks, gridSize, gridOccupancy))
+    {
         for(int i = 0; i < m_nbBricks; ++i){
             m_bricks[i].moveBrick(vector);
         }
+        return true;
+    }else
+        return false;
+
 }
 
 void Piece::draw(sf::RenderWindow& window) {

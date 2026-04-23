@@ -28,7 +28,7 @@ public:
     Piece(PieceMold Mold, sf::Vector2f brick_sizes, const sf::Texture &brick_texture);
     
     // Change la position des briques de la pièce
-    void tryMove(sf::Vector2i vector, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy);
+    bool tryMove(sf::Vector2i vector, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy);
 
     void draw(sf::RenderWindow& window);
     
