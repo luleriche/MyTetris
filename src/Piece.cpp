@@ -1,8 +1,9 @@
 #include "Piece.hpp"
+#include "Log.hpp"
 
 
 Piece::Piece(PieceMold mold, sf::Vector2f bricksSize, const sf::Texture& bricksTexture)
-: m_bricksTexture(&bricksTexture) , m_bricksColor(mold.color), m_bricksSize(bricksSize), m_rotationCenter(mold.rotationCenter+static_cast<sf::Vector2f>(mold.spawnOffset)) {
+: m_bricksTexture(&bricksTexture) , m_bricksColor(mold.color), m_bricksSize(bricksSize) {
     int x = 0;
     int y = 0;
     m_nbBricks = 0;
@@ -21,17 +22,18 @@ Piece::Piece(PieceMold mold, sf::Vector2f bricksSize, const sf::Texture& bricksT
             ++x;
         }
     }
+    m_rotationCenter = mold.rotationCenter+static_cast<sf::Vector2f>(mold.spawnOffset);
     m_rotState = Initial;
 }
 
 bool Piece::tryMove(sf::Vector2i vector, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy) {
-
     if(isValid(getMovedPositions(this->getPositions(), vector), gridSize, gridOccupancy))
     {
         for(int i = 0; i < m_nbBricks; ++i){
             m_bricks[i].moveBrick(vector);
         }
         m_rotationCenter += static_cast<sf::Vector2f>(vector);
+        Log::info("Piece déplace");
         return true;
     }else
         return false;

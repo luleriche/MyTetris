@@ -1,6 +1,7 @@
 #include <Game.hpp>
 #include <iostream>
 #include "Utils.hpp"
+#include "Log.hpp"
 #include <ctime>
 #include <cstdlib>
 
