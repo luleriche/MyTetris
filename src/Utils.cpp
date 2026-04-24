@@ -1,55 +1,51 @@
 #include "Utils.hpp"
 
-sf::Vector2f getRotatedPt(sf::Vector2f point, sf::Vector2f center, bool doClockwise){
+sf::Vector2f getRotatedPoint(sf::Vector2f point, sf::Vector2f center, bool doClockwise){
     sf::Vector2f result;
     sf::Vector2f offsetPt = point-center;
-    std::array<sf::Vector2f, 2> rotationMatrix = {sf::Vector2f(0, -1), sf::Vector2f(1, 0)};
-    result.x = rotationMatrix[0].x*offsetPt.x + rotationMatrix[1].x*offsetPt.y;
-    result.y = rotationMatrix[0].y*offsetPt.x + rotationMatrix[1].y*offsetPt.y;
+    if(doClockwise)
+        result = {-offsetPt.y, offsetPt.x}; // Calcul mathématique pour une rotation de 90° sens horaire
+    else
+        result = {-offsetPt.y, -offsetPt.x}; // Calcul mathématique pour une rotation de 90° sens anti-horaire
     result += center;
     return result;
 }
 
-std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> getPosAfterMove(std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> t_pos, int nb_pos, sf::Vector2i vector){
-    std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> result;
-    for(int i = 0; i < nb_pos; ++i){
-        result[i] = t_pos[i] + vector;
-    }
-    return result;
-}
-
-std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> getPosAfterRotate(std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> t_pos, int nb_pos, sf::Vector2f rotationCenter){
-    std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> result;
-    std::array<sf::Vector2f, NB_MAX_PIECE_BRICK> resultCenter;
-    std::array<sf::Vector2f, NB_MAX_PIECE_BRICK> centerOfBricks;
-    for(int i = 0; i < nb_pos; ++i){
-        centerOfBricks[i] = static_cast<sf::Vector2f>(t_pos[i]) + sf::Vector2f(0.5, 0.5);
-    }
-    for(int i = 0; i < nb_pos; ++i){
-        resultCenter[i] = getRotatedPt(centerOfBricks[i], rotationCenter, true);
-    }
-    for(int i = 0; i < nb_pos; ++i){
-        result[i] = static_cast<sf::Vector2i>(resultCenter[i] - sf::Vector2f(0.5, 0.5));
+ListVect2i getRotatedPositions(ListVect2i positions, sf::Vector2f center, bool doClockwise){
+    ListVect2i result;
+    result.count = positions.count;
+    sf::Vector2f brickCenter;
+    for(int i = 0; i < positions.count; ++i){
+        brickCenter = sf::Vector2f{positions.points[i]} + sf::Vector2f(0.5f, 0.5f);
+        result.points[i] = sf::Vector2i{getRotatedPoint(brickCenter, center, doClockwise) - sf::Vector2f(0.5f, 0.5f)};
     }
     return result;
 }
 
 
-
-bool isOutOfBounds(std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> t_pos, int nb_pos, sf::Vector2i grid_size){
-    int i = 0;
-    while(i < nb_pos and t_pos[i].x >= 0 and t_pos[i].x < grid_size.x and t_pos[i].y >= 0 and t_pos[i].y < grid_size.y)
-        ++i;
-    return i < nb_pos;
+ListVect2i getMovedPositions(ListVect2i positions, sf::Vector2i offset){
+    ListVect2i result;
+    result.count = positions.count;
+    for(int i = 0; i < positions.count; ++i){
+        result.points[i] = positions.points[i] + offset;
+    }
+    return result;
 }
 
-bool isSpaceFree(std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> t_pos, int nb_pos,  std::array<std::array<bool, nbMaxRow>, nbMaxCol> grid_occupancy){
+bool isOutOfBounds(ListVect2i positions, sf::Vector2i gridSize){
     int i = 0;
-    while(i < nb_pos and not grid_occupancy[t_pos[i].x][t_pos[i].y])
+    while(i < positions.count and positions.points[i].x >= 0 and positions.points[i].x < gridSize.x and positions.points[i].y >= 0 and positions.points[i].y < gridSize.y)
         ++i;
-    return i == nb_pos;
+    return i < positions.count;
 }
 
-bool isValid(std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> t_pos, int nb_pos, sf::Vector2i grid_size, std::array<std::array<bool, nbMaxRow>, nbMaxCol> grid_occupancy){
-    return not isOutOfBounds(t_pos, nb_pos, grid_size) and isSpaceFree(t_pos, nb_pos, grid_occupancy);
+bool isSpaceFree(ListVect2i positions,  std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy){
+    int i = 0;
+    while(i < positions.count and not gridOccupancy[positions.points[i].x][positions.points[i].y])
+        ++i;
+    return i == positions.count;
+}
+
+bool isValid(ListVect2i positions, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy){
+    return isSpaceFree(positions, gridOccupancy) and not isOutOfBounds(positions, gridSize);
 }

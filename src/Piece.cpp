@@ -21,11 +21,12 @@ Piece::Piece(PieceMold mold, sf::Vector2f bricksSize, const sf::Texture& bricksT
             ++x;
         }
     }
+    m_rotState = Initial;
 }
 
 bool Piece::tryMove(sf::Vector2i vector, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy) {
 
-    if(isValid(getPosAfterMove(this->getAllBricksPos(), m_nbBricks, vector), m_nbBricks, gridSize, gridOccupancy))
+    if(isValid(getMovedPositions(this->getPositions(), vector), gridSize, gridOccupancy))
     {
         for(int i = 0; i < m_nbBricks; ++i){
             m_bricks[i].moveBrick(vector);
@@ -36,12 +37,12 @@ bool Piece::tryMove(sf::Vector2i vector, sf::Vector2i gridSize, std::array<std::
         return false;
 }
 
-bool Piece::tryRotate(int nbRotation, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy){
-    std::array<sf::Vector2i,NB_MAX_PIECE_BRICK > posAfterRot = getPosAfterRotate(this->getAllBricksPos(), m_nbBricks, m_rotationCenter);
-    if(isValid(posAfterRot, m_nbBricks, gridSize, gridOccupancy))
+bool Piece::tryRotate(int side, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy){
+    ListVect2i posAfterRot = getRotatedPositions(this->getPositions(), m_rotationCenter, true);
+    if(isValid(posAfterRot, gridSize, gridOccupancy))
     {
         for(int i = 0; i < m_nbBricks; ++i){
-            m_bricks[i].setGridPos(posAfterRot[i]);
+            m_bricks[i].setGridPos(posAfterRot.points[i]);
         }
         return true;
     }else
@@ -59,10 +60,11 @@ int Piece::getNbBricks(){
     return m_nbBricks;
 }
 
-std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> Piece::getAllBricksPos(){
-    std::array<sf::Vector2i, NB_MAX_PIECE_BRICK> result;
+ListVect2i Piece::getPositions(){
+    ListVect2i result;
+    result.count = m_nbBricks;
     for(int i = 0; i < m_nbBricks; ++i){
-        result[i] = m_bricks[i].getGridPos();
+        result.points[i] = m_bricks[i].getGridPos();
     }
     return result;
 }
