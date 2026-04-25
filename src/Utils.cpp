@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Utils.hpp"
 
 sf::Vector2f getRotatedPoint(sf::Vector2f point, sf::Vector2f center, bool doClockwise){
@@ -47,5 +48,58 @@ bool isSpaceFree(ListVect2i positions,  std::array<std::array<bool, nbMaxRow>, n
 }
 
 bool isValid(ListVect2i positions, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy){
-    return isSpaceFree(positions, gridOccupancy) and not isOutOfBounds(positions, gridSize);
+    return not isOutOfBounds(positions, gridSize) and isSpaceFree(positions, gridOccupancy);
+}
+
+rotationState getNextRotationState(rotationState actualState, bool wasClockwise){
+    if(wasClockwise)
+        return static_cast<rotationState>((static_cast<int>(actualState) + 1) % 4);
+    else
+        return static_cast<rotationState>((static_cast<int>(actualState) - 1) % 4);
+}
+
+int getIndexFromRotationStates(rotationState firstState, rotationState secondState){
+    if(firstState == Initial){
+        if(secondState == Left)
+            return 0;
+        else
+            return 1;
+    }else if(firstState == Right){
+        if(secondState == Initial)
+            return 2;
+        else 
+            return 3;
+    }else if(firstState == Double){
+        if(secondState == Right)
+            return 4;
+        else
+            return 5;
+    }else if(firstState == Left){
+        if(secondState == Double)
+            return 6;
+        else
+            return 7;
+    }else
+        return 9;
+}
+
+rotationState getRotationStateFromLetter(char c){
+    if(c=='I')
+        return Initial;
+    else if(c=='R')
+        return Right;
+    else if(c=='D')
+        return Double;
+    else if(c=='L')
+        return Left;
+    else{
+        return Right;
+    }
+}
+
+void print(ListVect2i l){
+    std::cout << "Number of vector : " << l.count << std::endl;
+    for(int i = 0; i < l.count; ++i){
+        std::cout << l.points[i].x << ", " << l.points[i].y << std::endl;
+    }
 }

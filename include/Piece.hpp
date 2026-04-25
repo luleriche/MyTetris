@@ -23,6 +23,9 @@ private:
     sf::Vector2f m_bricksSize;
     sf::Vector2f m_rotationCenter;
     rotationState m_rotState;
+    ListVect2i* m_srsData;
+
+    void readWallKicks(std::string fileName);
 
 public:
     Piece() = default;
@@ -32,7 +35,7 @@ public:
     // Change la position des briques de la pièce
     bool tryMove(sf::Vector2i vector, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy);
 
-    bool tryRotate(int side, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy);
+    bool tryRotate(bool doClockwise, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy);
 
     void draw(sf::RenderWindow& window);
     

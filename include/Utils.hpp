@@ -6,11 +6,6 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 
-struct ListVect2i{
-    std::array<sf::Vector2i, 32> points;
-    int count;
-};
-
 const sf::Color CYAN(0, 255, 255);
 const sf::Color YELLOW(255, 255, 0);
 const sf::Color PURPLE(255, 0, 255);
@@ -22,8 +17,14 @@ const sf::Color GREEN(0, 255, 0);
 const int NB_MAX_PIECE_BRICK = 9;
 const int nbMaxCol = 40, nbMaxRow = 50;
 
+struct ListVect2i{
+    std::array<sf::Vector2i, 32> points;
+    int count;
+};
+
+
 enum rotationState{
-    Initial = 0, Right = 1, Double = 2, Left = 3
+    Initial = 0, Right, Double, Left
 };
 
 struct PieceMold{
@@ -33,7 +34,6 @@ struct PieceMold{
     sf::Vector2f rotationCenter;
     ListVect2i wallKicks;
 };
-
 
 const PieceMold Imold = {"xxxx", CYAN, {2, 2}, sf::Vector2f(2, 0)};
 const PieceMold Omold = {"xx/xx", YELLOW, {2, 2}, sf::Vector2f(1, 1)};
@@ -71,3 +71,11 @@ bool isOutOfBounds(ListVect2i positions, sf::Vector2i gridSize);
 bool isSpaceFree(ListVect2i positions,  std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy);
 
 bool isValid(ListVect2i positions, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy);
+
+rotationState getNextRotationState(rotationState actualState, bool wasClockwise);
+
+rotationState getRotationStateFromLetter(char c);
+
+int getIndexFromRotationStates(rotationState firstState, rotationState secondState);
+
+void print(ListVect2i l);

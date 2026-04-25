@@ -8,19 +8,23 @@
 Game::Game(sf::Vector2f gridSize) : m_grid(gridSize, 10, 18){
     srand(time(nullptr));
     if(!m_brickTexture.loadFromFile("assets/WhiteSquare.jpg"))
-        std::cout << "Erreur au chargement de la texture !";
+        Log::error("Erreur au chargement de la texture de brique.");
+    else
+        Log::info("Texture de brique chargée");
     m_piece = Piece(basisMolds[0], sf::Vector2f(35, 35), m_brickTexture);
     lastForceDownClock.restart();
 }
 
 void Game::game_loop(){
     sf::RenderWindow window(sf::VideoMode(350, 630), "My Tetris");
+    Log::info("Fenêtre d'affichage créée.");
     while (window.isOpen())
     {
         sf::Event event;
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
+
                 window.close();
             else if (event.type == sf::Event::KeyPressed) {
                 if (event.key.scancode == sf::Keyboard::Scan::Left) {
