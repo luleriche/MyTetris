@@ -22,6 +22,20 @@ struct ListVect2i{
     int count;
 };
 
+inline std::ostream& operator<<(std::ostream& os, const ListVect2i& l) {
+    os << "Size : " << l.count << std::endl;
+    for(int i = 0; i < l.count; ++i){
+        os <<  "(" << l.points[i].x << " " << l.points[i].y << ")";
+        if(i != l.count)
+            os << ", ";
+    }
+    return os;
+}
+
+inline std::ostream& operator<<(std::ostream& os, const sf::Vector2i& v) {
+    os << "("<< v.x <<" " << v.y << ")";
+    return os;
+}
 
 enum rotationState{
     Initial = 0, Right, Double, Left
@@ -76,6 +90,8 @@ rotationState getNextRotationState(rotationState actualState, bool wasClockwise)
 
 rotationState getRotationStateFromLetter(char c);
 
-int getIndexFromRotationStates(rotationState firstState, rotationState secondState);
+int getSrsIndexFromRotationStates(rotationState firstState, rotationState secondState);
+
+int getSrsIndexFromString(std::string strStates);
 
 void print(ListVect2i l);

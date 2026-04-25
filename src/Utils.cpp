@@ -51,14 +51,14 @@ bool isValid(ListVect2i positions, sf::Vector2i gridSize, std::array<std::array<
     return not isOutOfBounds(positions, gridSize) and isSpaceFree(positions, gridOccupancy);
 }
 
-rotationState getNextRotationState(rotationState actualState, bool wasClockwise){
-    if(wasClockwise)
+rotationState getNextRotationState(rotationState actualState, bool doClockwise){
+    if(doClockwise)
         return static_cast<rotationState>((static_cast<int>(actualState) + 1) % 4);
     else
         return static_cast<rotationState>((static_cast<int>(actualState) - 1) % 4);
 }
 
-int getIndexFromRotationStates(rotationState firstState, rotationState secondState){
+int getSrsIndexFromRotationStates(rotationState firstState, rotationState secondState){
     if(firstState == Initial){
         if(secondState == Left)
             return 0;
@@ -81,6 +81,12 @@ int getIndexFromRotationStates(rotationState firstState, rotationState secondSta
             return 7;
     }else
         return 9;
+}
+
+int getSrsIndexFromString(std::string strStates){
+    rotationState firstState = getRotationStateFromLetter(strStates[0]);
+    rotationState secondState = getRotationStateFromLetter(strStates[1]);
+    return getSrsIndexFromRotationStates(firstState, secondState);
 }
 
 rotationState getRotationStateFromLetter(char c){

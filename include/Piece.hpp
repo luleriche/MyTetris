@@ -19,11 +19,16 @@ private:
     int m_nbBricks;
     // Pointeur vers la texture des briques de la pièce
     const sf::Texture* m_bricksTexture;
+    // Couleurs d'accentuation des briques de la pièce
     sf::Color m_bricksColor;
+    // Taille en pixels des briques de la pièce
     sf::Vector2f m_bricksSize;
+    // Centre de rotation de la pièce
     sf::Vector2f m_rotationCenter;
+    // Indicateur de l'état de rotation de la pice
     rotationState m_rotState;
-    ListVect2i* m_srsData;
+    // Liste des offsets utilisés lors des rotations
+    std::array<ListVect2i, 8> m_srsOffsets;
 
     void readWallKicks(std::string fileName);
 

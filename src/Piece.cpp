@@ -3,23 +3,28 @@
 #include "Log.hpp"
 
 void Piece::readWallKicks(std::string fileName){
-    m_srsData = new ListVect2i[8];
     std::ifstream file;
     file.open(fileName);
     if(file.is_open()){
         Log::debug("Fichier SRS data ouvert correctement.");
-        std::string head;
-        int count;
+        Log::debug("Les infos dans le fichier SRS doivent être dans l'ordre : IL - IR - RI - ... - LI. Aucune vérification ne sera faite.");
+        std::string states; int count, index = 0;
         while(file.good()){
-            file >> head >> count;
-            int index = getIndexFromRotationStates(getRotationStateFromLetter(head[0]), getRotationStateFromLetter(head[1]));
-            m_srsData[index].count = count;
+            file >> states >> count;
+            m_srsOffsets[index].count = count;
             for(int i = 0; i < count; ++i){
-               file >> m_srsData[index].points[i].x >> m_srsData[index].points[i].y;
+               file >> m_srsOffsets[index].points[i].x >> m_srsOffsets[index].points[i].y;
             }
+            Log::debug("Liste suivante de offsets lu");
+            Log::debug(m_srsOffsets[index]);
+            ++index;
+            
         }
+        if(index < 8){
+            Log::error("Moins de 8 listes de offsets ont été lues. Seulement : ");Log::error(index);
+        }   
     }else{
-        Log::error("Le fichier SRS data n'a pas pu s'ouvrir.");
+        Log::error("Le fichier où se trouves les offsets SRS n'a pas pu s'ouvrir.Nom fichier :");Log::error(fileName);
     }
 }
 
@@ -55,10 +60,10 @@ bool Piece::tryMove(sf::Vector2i vector, sf::Vector2i gridSize, std::array<std::
             m_bricks[i].moveBrick(vector);
         }
         m_rotationCenter += static_cast<sf::Vector2f>(vector);
-        Log::info("Piece déplacée");
+        Log::debug("Piece déplacée. Vecteur de déplacement : ");Log::debug(vector);
         return true;
     }else{
-        Log::warn("La pièce n'a pas pu se déplacée");
+        Log::debug("Le déplacement est impossible. Vecteur de déplacement : ");Log::debug(vector);
         return false;
     }
         
@@ -66,30 +71,40 @@ bool Piece::tryMove(sf::Vector2i vector, sf::Vector2i gridSize, std::array<std::
 
 bool Piece::tryRotate(bool doClockwise, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy)
 {
-    ListVect2i posAfterRot = getRotatedPositions(this->getPositions(), m_rotationCenter, doClockwise);
-    
+    // Positions après une simple rotation, sans appliquer aucuns offsets
+    ListVect2i positionsAfterRotation = getRotatedPositions(this->getPositions(), m_rotationCenter, doClockwise);
     rotationState nextRotationState = getNextRotationState(m_rotState, doClockwise);
-    ListVect2i offsetsToTry = m_srsData[getIndexFromRotationStates(m_rotState, nextRotationState)];
+
+    // Liste des offsets a tenté selon les données SRS
+    ListVect2i offsetsToTry = m_srsOffsets[getSrsIndexFromRotationStates(m_rotState, nextRotationState)];
+    
+    // Calcul des positions après application du premier offset, souvent (0, 0)
     int countOffsetTry = 0;
-    while(countOffsetTry < offsetsToTry.count and not isValid(getMovedPositions(posAfterRot, offsetsToTry.points[countOffsetTry]), gridSize, gridOccupancy))
+    
+    // Tant qu'on a pas testé tous les offsets et que le dernier n'est pas valide
+    while(countOffsetTry < offsetsToTry.count and not isValid(getMovedPositions(positionsAfterRotation, offsetsToTry.points[countOffsetTry]), gridSize, gridOccupancy))
     {
-        Log::info("Offset tried but not valid.");
-        std::cout << offsetsToTry.points[countOffsetTry].x <<", "<< offsetsToTry.points[countOffsetTry].y<<std::endl;
+        Log::debug("Offset tenté et non valide : ");Log::debug(offsetsToTry.points[countOffsetTry]);
         ++countOffsetTry;
     }
+    
+    // Si on les a pas tous essayé alors l'actuel est valide
     if(countOffsetTry < offsetsToTry.count)
     {
-        ListVect2i newPositions = getMovedPositions(posAfterRot, offsetsToTry.points[countOffsetTry]);
+        // Changement de la position des briques
+        ListVect2i newPositions = getMovedPositions(positionsAfterRotation, offsetsToTry.points[countOffsetTry]);
         for(int i = 0; i < newPositions.count; ++i){
             m_bricks[i].setGridPos(newPositions.points[i]);
         }
+        // Décalage également du centre de rotation selon l'offset utilisé
         m_rotationCenter += sf::Vector2f{offsetsToTry.points[countOffsetTry]};
-        m_rotState = getNextRotationState(m_rotState, doClockwise);
-        Log::info("Piece tournée avec offset");
-        std::cout << offsetsToTry.points[countOffsetTry].x <<", "<< offsetsToTry.points[countOffsetTry].y<<std::endl;
+        m_rotState = nextRotationState;
+
+        Log::debug("Piece tournée avec offset : ");Log::debug(offsetsToTry.points[countOffsetTry]);
+
         return true;
     }else{
-        Log::warn("La pièce n'a pas pu tournée");
+        Log::warn("La pièce n'a pas pu tournée, tous les offsets ont été tentés.");
         return false;
     }
 }
