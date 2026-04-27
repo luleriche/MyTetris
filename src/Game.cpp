@@ -7,11 +7,22 @@
 
 Game::Game(sf::Vector2f gridSize) : m_grid(gridSize, 10, 18){
     srand(time(nullptr));
+
+    // On charge la texture des briques
     if(!m_brickTexture.loadFromFile("assets/WhiteSquare.jpg"))
         Log::error("Erreur au chargement de la texture de brique.");
     else
         Log::info("Texture de brique chargée");
-    m_piece = Piece(basisMolds[0], sf::Vector2f(35, 35), m_brickTexture);
+
+    // On charge les offsets des pièces
+    basisMolds[0].srsOffsets = getSrsOffsetsFromFile("assets/I_srsOffsets.txt");
+    Log::debug("I srs correctement chargé.");
+    std::array<ListVect2i, 8> otherOffsets = getSrsOffsetsFromFile("assets/JLTZSO_srsOffsets.txt");
+    for(int i = 1; i < 7; ++i){
+        basisMolds[i].srsOffsets = otherOffsets;
+    }
+
+    m_piece = Piece(basisMolds[rand()%7], sf::Vector2f(35, 35), m_brickTexture);
     lastForceDownClock.restart();
 }
 

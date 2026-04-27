@@ -2,32 +2,6 @@
 #include "Piece.hpp"
 #include "Log.hpp"
 
-void Piece::readWallKicks(std::string fileName){
-    std::ifstream file;
-    file.open(fileName);
-    if(file.is_open()){
-        Log::debug("Fichier SRS data ouvert correctement.");
-        Log::debug("Les infos dans le fichier SRS doivent être dans l'ordre : IL - IR - RI - ... - LI. Aucune vérification ne sera faite.");
-        std::string states; int count, index = 0;
-        while(file.good()){
-            file >> states >> count;
-            m_srsOffsets[index].count = count;
-            for(int i = 0; i < count; ++i){
-               file >> m_srsOffsets[index].points[i].x >> m_srsOffsets[index].points[i].y;
-            }
-            Log::debug("Liste suivante de offsets lu");
-            Log::debug(m_srsOffsets[index]);
-            ++index;
-            
-        }
-        if(index < 8){
-            Log::error("Moins de 8 listes de offsets ont été lues. Seulement : ");Log::error(index);
-        }   
-    }else{
-        Log::error("Le fichier où se trouves les offsets SRS n'a pas pu s'ouvrir.Nom fichier :");Log::error(fileName);
-    }
-}
-
 Piece::Piece(PieceMold mold, sf::Vector2f bricksSize, const sf::Texture& bricksTexture)
 : m_bricksTexture(&bricksTexture) , m_bricksColor(mold.color), m_bricksSize(bricksSize) {
     int x = 0;
@@ -50,8 +24,9 @@ Piece::Piece(PieceMold mold, sf::Vector2f bricksSize, const sf::Texture& bricksT
     }
     m_rotationCenter = mold.rotationCenter+static_cast<sf::Vector2f>(mold.spawnOffset);
     m_rotState = Initial;
-    this->readWallKicks("assets/wallKicksData.txt");
+    m_srsOffsets = mold.srsOffsets;
 }
+
 
 bool Piece::tryMove(sf::Vector2i vector, sf::Vector2i gridSize, std::array<std::array<bool, nbMaxRow>, nbMaxCol> gridOccupancy) {
     if(isValid(getMovedPositions(this->getPositions(), vector), gridSize, gridOccupancy))
@@ -130,4 +105,8 @@ ListVect2i Piece::getPositions(){
 
 std::array<Brick, NMax> Piece::getBricksList(){
     return m_bricks;
+}
+
+void Piece::setSrsOffsets(std::array<ListVect2i, 8> srsOffsets){
+    m_srsOffsets = srsOffsets;
 }

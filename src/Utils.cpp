@@ -1,5 +1,7 @@
 #include <iostream>
+#include <fstream>
 #include "Utils.hpp"
+#include "Log.hpp"
 
 sf::Vector2f getRotatedPoint(sf::Vector2f point, sf::Vector2f center, bool doClockwise){
     sf::Vector2f result;
@@ -22,7 +24,6 @@ ListVect2i getRotatedPositions(ListVect2i positions, sf::Vector2f center, bool d
     }
     return result;
 }
-
 
 ListVect2i getMovedPositions(ListVect2i positions, sf::Vector2i offset){
     ListVect2i result;
@@ -103,9 +104,40 @@ rotationState getRotationStateFromLetter(char c){
     }
 }
 
-void print(ListVect2i l){
-    std::cout << "Number of vector : " << l.count << std::endl;
-    for(int i = 0; i < l.count; ++i){
-        std::cout << l.points[i].x << ", " << l.points[i].y << std::endl;
+std::array<ListVect2i, 8> getSrsOffsetsFromFile(std::string fileName){
+    std::array<ListVect2i, 8> srsOffsets;
+    std::ifstream file;
+    file.open(fileName);
+
+    if(file.is_open())
+    {
+        Log::debug("Fichier SRS data ouvert correctement.");
+        Log::debug("Les infos dans le fichier SRS doivent être dans l'ordre : IL - IR - RI - ... - LI. Aucune vérification ne sera faite.");
+        
+        std::string states; // inutile en fait (ex IR) c'est comme une poubelle
+        int count; // nb de offset pour une rotation
+        int index = 0; // index de la rotation dans la liste srs
+        
+        while(file.good())
+        {
+            file >> states >> count;
+            srsOffsets[index].count = count;
+
+            for(int i = 0; i < count; ++i)
+            {
+               file >> srsOffsets[index].points[i].x >> srsOffsets[index].points[i].y;
+            }
+
+            Log::debug("Liste suivante de offsets lu :");
+            Log::debug(srsOffsets[index]);
+            ++index;
+        }
+        if(index < 8){
+            Log::error("Moins de 8 listes de offsets ont été lues. Seulement : ");Log::error(index);
+        }   
+        return srsOffsets;
+    }else{
+        Log::error("Le fichier où se trouves les offsets SRS n'a pas pu s'ouvrir.Nom fichier :");Log::error(fileName);
+        return srsOffsets;
     }
 }

@@ -49,4 +49,6 @@ public:
     ListVect2i getPositions();
 
     std::array<Brick, NMax> getBricksList();
+
+    void setSrsOffsets(std::array<ListVect2i, 8> srsOffsets);
 };

@@ -22,6 +22,14 @@ struct ListVect2i{
     int count;
 };
 
+struct PieceMold{
+    std::string pattern;
+    sf::Color color;
+    sf::Vector2i spawnOffset;
+    sf::Vector2f rotationCenter;
+    std::array<ListVect2i, 8> srsOffsets;
+};
+
 inline std::ostream& operator<<(std::ostream& os, const ListVect2i& l) {
     os << "Size : " << l.count << std::endl;
     for(int i = 0; i < l.count; ++i){
@@ -40,24 +48,6 @@ inline std::ostream& operator<<(std::ostream& os, const sf::Vector2i& v) {
 enum rotationState{
     Initial = 0, Right, Double, Left
 };
-
-struct PieceMold{
-    std::string pattern;
-    sf::Color color;
-    sf::Vector2i spawnOffset;
-    sf::Vector2f rotationCenter;
-    ListVect2i wallKicks;
-};
-
-const PieceMold Imold = {"xxxx", CYAN, {2, 2}, sf::Vector2f(2, 0)};
-const PieceMold Omold = {"xx/xx", YELLOW, {2, 2}, sf::Vector2f(1, 1)};
-const PieceMold Zmold = {"xxo/oxx", RED, sf::Vector2i(2, 2), sf::Vector2f(1.5, 1.5)};
-const PieceMold Smold = {"oxx/xxo", GREEN, sf::Vector2i(2, 2), sf::Vector2f(1.5, 1.5)};
-const PieceMold Jmold = {"xoo/xxx", BLUE, sf::Vector2i(2, 2), sf::Vector2f(1.5, 1.5)};
-const PieceMold Lmold = {"xxx/xoo", ORANGE, sf::Vector2i(2, 2), sf::Vector2f(1.5, 1.5)};
-const PieceMold Tmold = {"oxo/xxx", PURPLE, sf::Vector2i(2, 2), sf::Vector2f(1.5, 1.5)};
-
-const std::array<PieceMold, 7> basisMolds = {Imold, Omold, Jmold, Lmold, Tmold, Zmold, Smold};
 
 /**
 * @brief Renvoie l'image d'un point après une rotation de 90°
@@ -94,4 +84,4 @@ int getSrsIndexFromRotationStates(rotationState firstState, rotationState second
 
 int getSrsIndexFromString(std::string strStates);
 
-void print(ListVect2i l);
+std::array<ListVect2i, 8> getSrsOffsetsFromFile(std::string fileName);
